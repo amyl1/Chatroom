@@ -1,5 +1,4 @@
 import socket 
-import select 
 import sys 
 
         
@@ -17,7 +16,11 @@ while True:
     msg = server.recv(1024)
     print(msg.decode())
     usermessage=str(input("Enter your message:"))
-    usermessage=username+": "+usermessage
-    server.send(usermessage.encode())
-
-server.close() 
+    if usermessage != "QUIT":
+        usermessage=username+": "+usermessage
+        server.send(usermessage.encode())
+    else:
+        #quit
+        server.send("QUIT".encode())
+        #send message to say leaving
+        server.close() 

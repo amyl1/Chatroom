@@ -23,15 +23,20 @@ server.bind((hostName, Port))
 server.listen(100) 
 
 current_users=[]
-
-clientsocket, address = server.accept()
-current_users.append(clientsocket)
-print(f"Connection from {address} has been established")
-clientsocket.send("Welcome to the server! \n To quit the server, type QUIT \n".encode())
 while True:
-    message = clientsocket.recv(1024) 
-    if message:
-        broadcast(current_users,message)
+    clientsocket, address = server.accept()
+    current_users.append(clientsocket)
+    print(f"Connection from {address} has been established")
+    clientsocket.send("Welcome to the server! \n To quit the server, type QUIT \n".encode())
+    
+    while True:
+        message = clientsocket.recv(1024) 
+        if message:
+            if message!="QUIT":
+                broadcast(current_users,message)
+            else: #replace with username
+                broadcast(current_users,"User has left")
+                break
 
 conn.close() 
 server.close() 
