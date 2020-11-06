@@ -3,6 +3,11 @@ import socket
 import select 
 import sys 
 
+def new_user(users):
+    for user in users:
+        #replace this with username
+        user.send(bytes(f"New user from  {address} connected","utf-8"))
+
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM) 
 server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1) 
   
@@ -22,15 +27,13 @@ current_users=[]
 while True:
     clientsocket, address = server.accept()
     current_users.append(clientsocket)
-    for user in current_users:
-        #replace this with username
-        user.send(bytes(f"New user from  {address} connected","utf-8"))
+    new_user(current_users)
     print(f"Connection from {address} has been established")
     clientsocket.send(bytes("Welcome to the server","utf-8"))
     message = clientsocket.recv(2048) 
     if message:
         for user in current_users:
-            user.send(bytes(f"New message: {message} "))
+            user.send(bytes(f"New message: {message} ","utf-8"))
 
 conn.close() 
 server.close() 

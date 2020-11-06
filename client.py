@@ -13,5 +13,5 @@ while True:
     msg = server.recv(1024)
     print(msg.decode("utf-8"))
     usermessage=str(input("Enter your message:"))
-    server.send(usermessage)
+    server.send(usermessage.encode())
 server.close() 
