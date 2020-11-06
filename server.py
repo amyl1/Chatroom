@@ -3,37 +3,35 @@ import socket
 import select 
 import sys 
 
-def new_user(users):
+def broadcast(users,new_message):
     for user in users:
-        #replace this with username
-        user.send(bytes(f"New user from  {address} connected","utf-8"))
+        user.send(f": {new_message}".encode())
 
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM) 
 server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1) 
   
 
-# takes the first argument from command prompt as IP address 
+# local host
 hostName = ''
   
 # takes second argument from command prompt as port number 
 Port = int(sys.argv[1]) 
 server.bind((hostName, Port)) 
   
-#listens for 100 active connections.
+
 
 server.listen(100) 
 
 current_users=[]
+
+clientsocket, address = server.accept()
+current_users.append(clientsocket)
+print(f"Connection from {address} has been established")
+clientsocket.send("Welcome to the server! \n To quit the server, type QUIT \n".encode())
 while True:
-    clientsocket, address = server.accept()
-    current_users.append(clientsocket)
-    new_user(current_users)
-    print(f"Connection from {address} has been established")
-    clientsocket.send(bytes("Welcome to the server","utf-8"))
-    message = clientsocket.recv(2048) 
+    message = clientsocket.recv(1024) 
     if message:
-        for user in current_users:
-            user.send(bytes(f"New message: {message} ","utf-8"))
+        broadcast(current_users,message)
 
 conn.close() 
 server.close() 
