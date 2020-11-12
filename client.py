@@ -5,11 +5,14 @@ from threading import Thread
 msg_list=[]
 
 def receive():
-   try:
-      msg = client_socket.recv(1024).decode()
-      msg_list.append(msg)
-   except:
-      print("Error!")
+   while True:
+      try:
+         msg = client_socket.recv(1024).decode()
+         print(msg+"\n")
+         print("Enter a message:")
+      except:
+         print("Error!")
+         break
 def send(msg):
     client_socket.send(msg.encode())
     if msg == "quit":
@@ -22,14 +25,12 @@ hostName = str(sys.argv[2])
 port = int(sys.argv[3])
 
 client_socket.connect((hostName,port))
+print('Welcome! If you ever want to quit, type quit to exit.')
 receive_thread = Thread(target=receive)
 receive_thread.start()
 send(username)
-receive()
+
 while True:
-   for i in range(len(msg_list)):
-      print(msg_list.pop())
-   message=input("Enter a message: ")
+   message=input("")
    if message:
       send(username+": " + message)
-   receive()
