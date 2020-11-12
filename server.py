@@ -15,17 +15,17 @@ def accept_incoming_connections():
 
 def handle_client(client):
    #Handles a single client connection.
-   name = client.recv(buffer_size).decode("utf8")
+   name = client.recv(buffer_size).decode()
    welcome = 'Welcome! If you ever want to quit, type quit to exit.'
    client.send(welcome.encode())
    clients[client] = name
    broadcast("{} has joined the server. Say hello!".format(name))
    while True:
         msg = client.recv(buffer_size)
-        if msg != bytes("{quit}", "utf8"):
+        if msg != "quit".encode():
             broadcast(msg)
         else:
-            client.send("{quit}", "utf8").encode()
+            client.send("quit".encode())
             client.close()
             del clients[client]
             #add user name

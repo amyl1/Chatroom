@@ -2,16 +2,16 @@ from socket import AF_INET, socket, SOCK_STREAM
 import sys 
 import time
 from threading import Thread
+msg_list=[]
 
 def receive():
-   while True:
-      try:
-         msg = client_socket.recv(1024).decode("utf8")
-         return msg
-      except:
-         print("Error")
+   try:
+      msg = client_socket.recv(1024).decode()
+      msg_list.append(msg)
+   except:
+      print("Error!")
 def send(msg):
-    client_socket.send(bytes(msg, "utf8"))
+    client_socket.send(msg.encode())
     if msg == "quit":
         client_socket.close()
 
@@ -25,11 +25,11 @@ client_socket.connect((hostName,port))
 receive_thread = Thread(target=receive)
 receive_thread.start()
 send(username)
-
-print(receive())
+receive()
 while True:
-   print(receive())
+   for i in range(len(msg_list)):
+      print(msg_list.pop())
    message=input("Enter a message: ")
    if message:
       send(username+": " + message)
-   print(receive())
+   receive()
