@@ -4,11 +4,12 @@ import time
 from threading import Thread
 
 def receive():
-   try:
-      msg = client_socket.recv(1024).decode("utf8")
-      return msg
-   except:
-      print("Error")
+   while True:
+      try:
+         msg = client_socket.recv(1024).decode("utf8")
+         return msg
+      except:
+         print("Error")
 def send(msg):
     client_socket.send(bytes(msg, "utf8"))
     if msg == "quit":
@@ -24,10 +25,11 @@ client_socket.connect((hostName,port))
 receive_thread = Thread(target=receive)
 receive_thread.start()
 send(username)
+
+print(receive())
 while True:
    print(receive())
    message=input("Enter a message: ")
    if message:
       send(username+": " + message)
-   
-
+   print(receive())

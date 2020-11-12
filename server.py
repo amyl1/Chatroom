@@ -9,7 +9,7 @@ def accept_incoming_connections():
         client, client_address = server.accept()
         #replace with user name
         print("%s:%s has connected." % client_address)
-        client.send(bytes("New user connected", "utf8")) #add username
+        client.send("Connecting...".encode())
         addresses[client] = client_address
         Thread(target=handle_client, args=(client,)).start()
 
@@ -17,24 +17,24 @@ def handle_client(client):
    #Handles a single client connection.
    name = client.recv(buffer_size).decode("utf8")
    welcome = 'Welcome! If you ever want to quit, type quit to exit.'
-   client.send(bytes(welcome, "utf8"))
-   #add username
+   client.send(welcome.encode())
    clients[client] = name
+   broadcast("{} has joined the server. Say hello!".format(name))
    while True:
         msg = client.recv(buffer_size)
         if msg != bytes("{quit}", "utf8"):
             broadcast(msg)
         else:
-            client.send(bytes("{quit}", "utf8"))
+            client.send("{quit}", "utf8").encode()
             client.close()
             del clients[client]
             #add user name
-            broadcast(bytes("A user has left the chat." ,"utf8"))
+            broadcast("A user has left the chat.".encode())
             break
 
-def broadcast(msg):  # add username.
+def broadcast(msg):
      for sock in clients:
-        sock.send(bytes(msg))
+        sock.send("{}".format(msg).encode())
 
 
 #sets up dictionaries to store clients and their addresses
