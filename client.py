@@ -1,21 +1,31 @@
-import socket 
+from socket import AF_INET, socket, SOCK_STREAM 
 import sys 
 import time
-        
-server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+from threading import Thread
+
+def receive():
+   try:
+      msg = client_socket.recv(1024).decode("utf8")
+   except:
+      print("Error")
+def send(msg):
+    client_socket.send(bytes(msg, "utf8"))
+    if msg == "quit":
+        client_socket.close()
+
+
+client_socket = socket(AF_INET,SOCK_STREAM)
 username = str(sys.argv[1])
 hostName = str(sys.argv[2]) 
 port = int(sys.argv[3])
 
-server=socket.socket()
-server.connect((hostName,port))
-print('Connected to the chat server')
+client_socket.connect((hostName,port))
+receive_thread = Thread(target=receive)
+receive_thread.start()
 
-while True: 
-   incoming_message=server.recv(1024)
-   incoming_message=incoming_message.decode()
-   print(" Server :", incoming_message)
-   message= input(str("Enter a message:"))
-   message =message.encode()
-   server.send(message)
-   print(" message has been sent...")
+while True:
+   message=input("Enter a message: ")
+   if message:
+      send(message)
+   receive()
+
