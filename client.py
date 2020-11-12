@@ -6,6 +6,7 @@ from threading import Thread
 def receive():
    try:
       msg = client_socket.recv(1024).decode("utf8")
+      return msg
    except:
       print("Error")
 def send(msg):
@@ -22,10 +23,11 @@ port = int(sys.argv[3])
 client_socket.connect((hostName,port))
 receive_thread = Thread(target=receive)
 receive_thread.start()
-
+send(username)
 while True:
+   print(receive())
    message=input("Enter a message: ")
    if message:
-      send(message)
-   receive()
+      send(username+": " + message)
+   
 

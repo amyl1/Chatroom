@@ -15,29 +15,26 @@ def accept_incoming_connections():
 
 def handle_client(client):
    #Handles a single client connection.
-   #name = client.recv(buffer_size).decode("utf8")
+   name = client.recv(buffer_size).decode("utf8")
    welcome = 'Welcome! If you ever want to quit, type quit to exit.'
    client.send(bytes(welcome, "utf8"))
    #add username
-   msg = "A new user has joined the chat!"
-   broadcast(bytes(msg, "utf8"))
-   #clients[client] = name
+   clients[client] = name
    while True:
         msg = client.recv(buffer_size)
         if msg != bytes("{quit}", "utf8"):
-           #add user name
             broadcast(msg)
         else:
             client.send(bytes("{quit}", "utf8"))
             client.close()
             del clients[client]
             #add user name
-            broadcast(bytes("A username has left the chat." ,"utf8"))
+            broadcast(bytes("A user has left the chat." ,"utf8"))
             break
 
 def broadcast(msg):  # add username.
      for sock in clients:
-        sock.send(bytes("username", "utf8")+msg)
+        sock.send(bytes(msg))
 
 
 #sets up dictionaries to store clients and their addresses
