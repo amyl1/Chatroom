@@ -7,7 +7,6 @@ def accept_incoming_connections():
     #Sets up handling for incoming clients.
     while True:
         client, client_address = server.accept()
-        #replace with user name
         print("%s:%s has connected." % client_address)
         addresses[client] = client_address
         Thread(target=handle_client, args=(client,)).start()
@@ -24,9 +23,10 @@ def handle_client(client):
         else:
             client.send("quit".encode())
             client.close()
+            print("{} has left.".format(clients[client]))
             del clients[client]
             #add user name
-            broadcast("A user has left the chat.".encode())
+            broadcast("A user has left the chat.")
             break
 
 def broadcast(msg):
@@ -44,9 +44,9 @@ port = int(sys.argv[1])
 server.bind(('',port))
 
 if __name__ == "__main__":
-   server.listen(5)  # Listens for 5 connections at max.
+   server.listen(20)  # Listens for 5 connections at max.
    print("Waiting for connection...")
    ACCEPT_THREAD = Thread(target=accept_incoming_connections)
-   ACCEPT_THREAD.start()  # Starts the infinite loop.
+   ACCEPT_THREAD.start()
    ACCEPT_THREAD.join()
    server.close()

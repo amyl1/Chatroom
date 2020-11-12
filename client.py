@@ -3,20 +3,26 @@ import sys
 import time
 from threading import Thread
 msg_list=[]
-
+run=True
 def receive():
    while True:
       try:
          msg = client_socket.recv(1024).decode()
-         print(msg+"\n")
-         print("Enter a message:")
+         if msg!="quit":
+            print(msg+"\n")
+            print("Enter a message:")
+         else:
+            print("You have left the server")
+            client_socket.close()
+            run=False
+            break
       except:
          print("Error!")
+         run=False
          break
+         
 def send(msg):
     client_socket.send(msg.encode())
-    if msg == "quit":
-        client_socket.close()
 
 
 client_socket = socket(AF_INET,SOCK_STREAM)
@@ -30,7 +36,10 @@ receive_thread = Thread(target=receive)
 receive_thread.start()
 send(username)
 
-while True:
+while run==True:
    message=input("")
    if message:
-      send(username+": " + message)
+      if message!="quit":
+         send(username+": " + message)
+      else:
+         send(message)
