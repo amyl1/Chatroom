@@ -1,3 +1,4 @@
+#add error handling if argumnets not correct
 from socket import AF_INET, socket, SOCK_STREAM 
 import sys 
 import time
@@ -31,7 +32,7 @@ hostName = str(sys.argv[2])
 port = int(sys.argv[3])
 
 client_socket.connect((hostName,port))
-print('Welcome! If you ever want to quit, type quit to exit.')
+print('Welcome! If you want to quit, type quit to exit.')
 receive_thread = Thread(target=receive)
 receive_thread.start()
 send(username)
@@ -43,3 +44,4 @@ while run==True:
          send(username+": " + message)
       else:
          send(message)
+         break
