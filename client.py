@@ -1,4 +1,4 @@
-#fix error if client crashes out
+#check server message if user leaves
 from socket import AF_INET, socket, SOCK_STREAM 
 import sys 
 import time

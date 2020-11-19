@@ -17,18 +17,24 @@ def handle_client(client):
    clients[client] = name
    broadcast("{} has joined".format(name))
    while True:
-        msg = client.recv(buffer_size).decode()
-        if msg != "quit":
-            broadcast(msg)
-        else:
-            client.send("quit".encode())
-            client.close()
+        try:
+            msg = client.recv(buffer_size).decode()
+            if msg != "quit":
+                broadcast(msg)
+            else:
+                client.send("quit".encode())
+                client.close()
+                print("{} has left.".format(clients[client]))
+                user=clients[client]
+                del clients[client]
+                broadcast(user+" has left the chat.")
+                break
+        except:
             print("{} has left.".format(clients[client]))
             user=clients[client]
             del clients[client]
             broadcast(user+" has left the chat.")
             break
-
 
 def broadcast(msg):
      for sock in clients:
