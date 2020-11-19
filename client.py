@@ -1,5 +1,4 @@
 #fix error if client crashes out
-#add error handling if argumnets not correct
 from socket import AF_INET, socket, SOCK_STREAM 
 import sys 
 import time
@@ -28,7 +27,6 @@ def send(msg):
 
 #check sys arguments
 if len(sys.argv) != 4 :
-   print(len(sys.argv))
    print ('Incorrect command line arguments given')
    sys.exit(1) 
 try:

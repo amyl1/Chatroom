@@ -9,7 +9,7 @@ def accept_incoming_connections():
         client, client_address = server.accept()
         print("%s:%s has connected." % client_address)
         addresses[client] = client_address
-        Thread(target=handle_client, args=(client,)).start()
+        Thread(target=handle_client, args=(client,)).start()          
 
 def handle_client(client):
    #Handles a single client connection.
@@ -18,8 +18,7 @@ def handle_client(client):
    broadcast("{} has joined".format(name))
    while True:
         msg = client.recv(buffer_size).decode()
-        if msg != "quit".encode():
-            print(msg)
+        if msg != "quit":
             broadcast(msg)
         else:
             client.send("quit".encode())
@@ -29,6 +28,7 @@ def handle_client(client):
             del clients[client]
             broadcast(user+" has left the chat.")
             break
+
 
 def broadcast(msg):
      for sock in clients:
@@ -54,7 +54,7 @@ port = int(sys.argv[1])
 server.bind(('',port))
 
 if __name__ == "__main__":
-   server.listen(20)  # Listens for 5 connections at max.
+   server.listen(100)  # Listens for 100 connections at max.
    print("Waiting for connection...")
    ACCEPT_THREAD = Thread(target=accept_incoming_connections)
    ACCEPT_THREAD.start()
