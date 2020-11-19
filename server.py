@@ -35,6 +35,15 @@ def broadcast(msg):
         sock.send("{}".format(msg).encode())
 
 
+#check sys arguments
+if len(sys.argv) != 2 :
+    print ('Incorrect command line arguments given')
+    sys.exit(1) 
+try:
+    port = int(sys.argv[1])
+except ValueError:
+    print ('Incorrect command line arguments given')
+    sys.exit(1) 
 #sets up dictionaries to store clients and their addresses
 clients = {}
 addresses = {}

@@ -11,7 +11,6 @@ def receive():
       try:
          msg = client_socket.recv(1024).decode()
          if msg!="quit":
-            #print(msg[1:]+"\n")
             print(msg+"\n")
             print("Enter a message:")
          else:
@@ -27,7 +26,16 @@ def receive():
 def send(msg):
     client_socket.send(msg.encode())
 
-
+#check sys arguments
+if len(sys.argv) != 4 :
+   print(len(sys.argv))
+   print ('Incorrect command line arguments given')
+   sys.exit(1) 
+try:
+    port = int(sys.argv[3])
+except ValueError:
+    print ('Type error: Incorrect command line arguments given')
+    sys.exit(1) 
 client_socket = socket(AF_INET,SOCK_STREAM)
 username = str(sys.argv[1])
 hostName = str(sys.argv[2]) 
