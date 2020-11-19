@@ -17,16 +17,17 @@ def handle_client(client):
    clients[client] = name
    broadcast("{} has joined".format(name))
    while True:
-        msg = client.recv(buffer_size)
+        msg = client.recv(buffer_size).decode()
         if msg != "quit".encode():
+            print(msg)
             broadcast(msg)
         else:
             client.send("quit".encode())
             client.close()
             print("{} has left.".format(clients[client]))
+            user=clients[client]
             del clients[client]
-            #add user name
-            broadcast("A user has left the chat.")
+            broadcast(user+" has left the chat.")
             break
 
 def broadcast(msg):

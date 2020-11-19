@@ -1,3 +1,4 @@
+#fix error if client crashes out
 #add error handling if argumnets not correct
 from socket import AF_INET, socket, SOCK_STREAM 
 import sys 
@@ -10,6 +11,7 @@ def receive():
       try:
          msg = client_socket.recv(1024).decode()
          if msg!="quit":
+            #print(msg[1:]+"\n")
             print(msg+"\n")
             print("Enter a message:")
          else:
