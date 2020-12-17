@@ -1,0 +1,10 @@
+INFO:root:127.0.0.1:1089 has connected.
+INFO:root:John has joined 
+INFO:root:John: Hello 
+INFO:root:127.0.0.1:1094 has connected.
+INFO:root:Rob has joined 
+INFO:root:Rob: Hello! 
+INFO:root:John: Hi there! 
+INFO:root:John: How are you? 
+INFO:root:Rob has left. 
+INFO:root:John has left. 

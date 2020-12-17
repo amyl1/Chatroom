@@ -2,12 +2,14 @@ from socket import AF_INET, socket, SOCK_STREAM
 import sys
 import time
 from threading import Thread
+import logging
 
 def accept_incoming_connections():
     #Sets up handling for incoming clients.
     while True:
         client, client_address = server.accept()
         print("%s:%s has connected." % client_address)
+        logging.info("%s:%s has connected." % client_address)
         addresses[client] = client_address
         Thread(target=handle_client, args=(client,)).start()          
 
@@ -27,7 +29,7 @@ def handle_client(client):
                 print("{} has left.".format(clients[client]))
                 user=clients[client]
                 del clients[client]
-                broadcast(user+" has left the chat.")
+                broadcast(user+" has left.")
                 break
         except:
             print("{} has left.".format(clients[client]))
@@ -37,10 +39,15 @@ def handle_client(client):
             break
 
 def broadcast(msg):
-     for sock in clients:
+    for sock in clients:
         sock.send("{}".format(msg).encode())
+    logging.info("{} ".format(msg))
 
-
+def close_all():
+    for sock in clients:
+        sock.send("Server has crashed! Disconnecting...".encode())
+        sock.close()
+    logging.info("server crashed. All users disconneted2)
 #check sys arguments
 if len(sys.argv) != 2 :
     print ('Incorrect command line arguments given')
@@ -53,16 +60,21 @@ except ValueError:
 #sets up dictionaries to store clients and their addresses
 clients = {}
 addresses = {}
-
+logging.basicConfig(filename="server.log",level=logging.INFO)
+with open('server.log', 'w'):
+    pass
 buffer_size=1024
 server=socket(AF_INET, SOCK_STREAM)
 port = int(sys.argv[1])
 server.bind(('',port))
 
 if __name__ == "__main__":
-   server.listen(100)  # Listens for 100 connections at max.
-   print("Waiting for connection...")
-   ACCEPT_THREAD = Thread(target=accept_incoming_connections)
-   ACCEPT_THREAD.start()
-   ACCEPT_THREAD.join()
-   server.close()
+    try:
+        server.listen(100)  # Listens for 100 connections at max.
+        print("Waiting for connection...")
+        ACCEPT_THREAD = Thread(target=accept_incoming_connections)
+        ACCEPT_THREAD.start()
+        ACCEPT_THREAD.join()
+    except:
+        close_all()
+        server.close()

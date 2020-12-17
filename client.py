@@ -1,5 +1,5 @@
 #check server message if user leaves
-from socket import AF_INET, socket, SOCK_STREAM 
+import socket
 import sys 
 import time
 from threading import Thread
@@ -34,18 +34,23 @@ try:
 except ValueError:
     print ('Type error: Incorrect command line arguments given')
     sys.exit(1) 
-client_socket = socket(AF_INET,SOCK_STREAM)
+client_socket = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
 username = str(sys.argv[1])
 hostName = str(sys.argv[2]) 
 port = int(sys.argv[3])
 
-client_socket.connect((hostName,port))
+while not username:
+   username=input("Please enter a non-empty username")
+try:
+   client_socket.connect((hostName,port))
+except socket.error:
+   sys.exit("Error connecting: please check the port and hostname")
 print('Welcome! If you want to quit, type quit to exit.')
 receive_thread = Thread(target=receive)
 receive_thread.start()
 send(username)
 
-while run==True:
+while True:
    message=input("")
    if message:
       if message!="quit":
