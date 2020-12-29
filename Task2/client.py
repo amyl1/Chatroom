@@ -1,35 +1,74 @@
-from tkinter import *
+import tkinter as tk
 from tkinter.ttk import *
 
-def clicked():
-    res="Messge was "+txt.get()
-    lbl.configure(text=res,font=("Arial Bold", 10))
+def changeName():
+    res="Change Name"
+    lbl1.configure(text=res,font=("Arial Bold", 10))
+
 def showAllUsers():
     res="All users"
-    lbl.configure(text=res,font=("Arial Bold", 10))
+    lbl1.configure(text=res,font=("Arial Bold", 10))
 
-window=Tk()
+def helpFunc():
+    res="Help"
+    lbl1.configure(text=res,font=("Arial Bold", 10))
+
+def leaveFunc():
+    res="Leave"
+    lbl1.configure(text=res,font=("Arial Bold", 10))
+
+def send():
+    res="Send"
+    lbl1.configure(text=res,font=("Arial Bold", 10))
+
+
+window=tk.Tk()
 window.title("Instant Messenger")
-window.geometry('800x400')
+width  = window.winfo_screenwidth()
+height = window.winfo_screenheight()
+window.geometry(f'{width//2}x{height//2}')
 
-lbl = Label(window, text="Hello", font=("Arial Bold", 10))
-lbl.grid(column=0, row=0)
+menubar=tk.Menu(window)
 
-combo = Combobox(window)
+nameMenu=tk.Menu(menubar, tearoff=0)
+nameMenu.add_command(label="Change Username", command=changeName)
+menubar.add_cascade(label="Username", menu=nameMenu)
 
-combo['values']= ("Send to everyone","Send to one user")
+userMenu=tk.Menu(menubar, tearoff=0)
+userMenu.add_command(label="Show List of Users",command=showAllUsers)
+menubar.add_cascade(label="Show Users", menu=userMenu)
 
-combo.current(1) #set the selected item
+helpMenu=tk.Menu(menubar, tearoff=0)
+helpMenu.add_command(label="Help",command=helpFunc)
+menubar.add_cascade(label="Help", menu=helpMenu)
 
-combo.grid(column=1, row=1)
+leaveMenu=tk.Menu(menubar, tearoff=0)
+leaveMenu.add_command(label="Leave the chat",command=leaveFunc)
+menubar.add_cascade(label="Leave", menu=leaveMenu)
 
-btn = Button(window, text="Show all users",command=showAllUsers)
-btn.grid(column=1, row=2)
+window.config(menu=menubar)
+
+Radiobutton(window, text = "Send to All", value = 1).grid(column=0, row=1)
+Radiobutton(window, text = "Whisper", value = 2).grid(column=1, columnspan = 2, row=1)
+
+frm_messages = tk.Frame(master=window)
+scrollbar = tk.Scrollbar(master=frm_messages)
+messages = tk.Listbox(
+    master=frm_messages, 
+    yscrollcommand=scrollbar.set
+)
+scrollbar.pack(side=tk.RIGHT, fill=tk.Y, expand=False)
+messages.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
+frm_messages.grid(row=2, column=0, columnspan=2, sticky="nsew")
 
 lbl1 = Label(window, text="Enter a message:", font=("Arial Bold", 10))
-lbl1.grid(column=0, row=3)
-txt = Entry(window,width=80)
-txt.grid(column=1, row=3)
-btn = Button(window, text="Send",command=clicked)
-btn.grid(column=2, row=3)
+lbl1.grid(column=0, row=4)
+
+msg = Entry(window,width=80)
+msg.grid(column=0, row=3, columnspan = 1)
+btn = Button(window, text="Send",command=send)
+btn.grid(column=1, row=3)
+window.columnconfigure(0, weight=1)
+window.columnconfigure(1, weight=1)
+
 window.mainloop()
