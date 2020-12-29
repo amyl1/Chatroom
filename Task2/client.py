@@ -1,7 +1,9 @@
 import tkinter as tk
+from tkinter import messagebox
 from tkinter.ttk import *
 
 def changeName():
+    popupmsg("Enter Your New Username")
     res="Change Name"
     lbl1.configure(text=res,font=("Arial Bold", 10))
 
@@ -10,10 +12,12 @@ def showAllUsers():
     lbl1.configure(text=res,font=("Arial Bold", 10))
 
 def helpFunc():
+    messagebox.showinfo("Title", "a Tk MessageBox")
     res="Help"
     lbl1.configure(text=res,font=("Arial Bold", 10))
 
 def leaveFunc():
+    messagebox.askquestion("Leave Chat", "Are you sure you want to quit?")
     res="Leave"
     lbl1.configure(text=res,font=("Arial Bold", 10))
 
@@ -21,6 +25,20 @@ def send():
     res="Send"
     lbl1.configure(text=res,font=("Arial Bold", 10))
 
+def popupmsg(msg):
+    popup = tk.Tk()
+    popup.geometry("400x200")
+    popup.wm_title("Change Username")
+    label = Label(popup, text=msg)
+    label.pack()
+    newName=Entry(popup)
+    newName.pack()
+    #label.pack(side="top", fill="x", pady=10)
+    #newName = tk.ttk.Entry(window)
+    #newName.pack(side="top", fill="x", pady=10)
+    B1 = tk.ttk.Button(popup, text="Change", command = popup.destroy)
+    B1.pack()
+    popup.mainloop()
 
 window=tk.Tk()
 window.title("Instant Messenger")
@@ -64,7 +82,7 @@ frm_messages.grid(row=2, column=0, columnspan=2, sticky="nsew")
 lbl1 = Label(window, text="Enter a message:", font=("Arial Bold", 10))
 lbl1.grid(column=0, row=4)
 
-msg = Entry(window,width=80)
+msg = Entry(window)
 msg.grid(column=0, row=3, columnspan = 1)
 btn = Button(window, text="Send",command=send)
 btn.grid(column=1, row=3)
