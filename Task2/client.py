@@ -1,29 +1,30 @@
+#check server message if user leaves
+import socket
+import sys 
+import time
 import tkinter as tk
+from threading import Thread
 from tkinter import messagebox
 from tkinter.ttk import *
 
 def changeName():
     popupmsg("Enter Your New Username")
     res="Change Name"
-    lbl1.configure(text=res,font=("Arial Bold", 10))
 
 def showAllUsers():
     res="All users"
-    lbl1.configure(text=res,font=("Arial Bold", 10))
 
 def helpFunc():
     messagebox.showinfo("Title", "a Tk MessageBox")
     res="Help"
-    lbl1.configure(text=res,font=("Arial Bold", 10))
 
 def leaveFunc():
-    messagebox.askquestion("Leave Chat", "Are you sure you want to quit?")
-    res="Leave"
-    lbl1.configure(text=res,font=("Arial Bold", 10))
+    messagebox.showinfo("Leave Chat", "You have left the chat")
+    msg="quit"
+    client_socket.send(msg.encode())
+    #client_socket.close()
+    #window.quit()
 
-def send():
-    res="Send"
-    lbl1.configure(text=res,font=("Arial Bold", 10))
 
 def popupmsg(msg):
     popup = tk.Tk()
@@ -33,12 +34,56 @@ def popupmsg(msg):
     label.pack()
     newName=Entry(popup)
     newName.pack()
-    #label.pack(side="top", fill="x", pady=10)
-    #newName = tk.ttk.Entry(window)
-    #newName.pack(side="top", fill="x", pady=10)
     B1 = tk.ttk.Button(popup, text="Change", command = popup.destroy)
     B1.pack()
     popup.mainloop()
+
+def receive():
+    while True:
+        try:
+            msg = client_socket.recv(1024).decode()
+            if msg!="quit":
+                print(msg+"\n")
+                #print("Enter a message:")
+            else:
+                print("You have left the server")
+                client_socket.close()
+                window.quit()
+                break
+        except:
+            print(msg)
+            print("Error!")
+            break
+         
+def send():
+    msg=username+": "+msgForm.get()
+    msgForm.set("")
+    client_socket.send(msg.encode())
+
+#check sys arguments
+if len(sys.argv) != 4 :
+   print ('Incorrect command line arguments given')
+   sys.exit(1) 
+try:
+    port = int(sys.argv[3])
+except ValueError:
+    print ('Type error: Incorrect command line arguments given')
+    sys.exit(1) 
+client_socket = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+username = str(sys.argv[1])
+hostName = str(sys.argv[2]) 
+port = int(sys.argv[3])
+
+while not username:
+   username=input("Please enter a non-empty username")
+try:
+   client_socket.connect((hostName,port))
+except socket.error:
+   sys.exit("Error connecting: please check the port and hostname")
+print('Welcome! If you want to quit, type quit to exit.')
+receive_thread = Thread(target=receive)
+receive_thread.start()
+client_socket.send(username.encode())
 
 window=tk.Tk()
 window.title("Instant Messenger")
@@ -69,24 +114,24 @@ window.config(menu=menubar)
 Radiobutton(window, text = "Send to All", value = 1).grid(column=0, row=1)
 Radiobutton(window, text = "Whisper", value = 2).grid(column=1, columnspan = 2, row=1)
 
-frm_messages = tk.Frame(master=window)
-scrollbar = tk.Scrollbar(master=frm_messages)
-messages = tk.Listbox(
-    master=frm_messages, 
-    yscrollcommand=scrollbar.set
-)
+messages_frame=tk.Frame(window)
+msgForm=tk.StringVar()
+msgForm.set("Enter message: ")
+scrollbar = tk.Scrollbar(messages_frame)
+msg_list = tk.Listbox(messages_frame, height=15, width=50, yscrollcommand=scrollbar.set)
 scrollbar.pack(side=tk.RIGHT, fill=tk.Y, expand=False)
-messages.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
-frm_messages.grid(row=2, column=0, columnspan=2, sticky="nsew")
+msg_list.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
+#msg_list.grid(row=3)
+messages_frame.grid(row=4)
 
-lbl1 = Label(window, text="Enter a message:", font=("Arial Bold", 10))
-lbl1.grid(column=0, row=4)
+entry_field = tk.Entry(window, textvariable=msgForm)
+entry_field.bind("<Return>", send)
+entry_field.grid(column=0, row=5)
+send_button = tk.Button(window, text="Send", command=send)
+send_button.grid(column=1, row=5)
 
-msg = Entry(window)
-msg.grid(column=0, row=3, columnspan = 1)
-btn = Button(window, text="Send",command=send)
-btn.grid(column=1, row=3)
 window.columnconfigure(0, weight=1)
 window.columnconfigure(1, weight=1)
+
 
 window.mainloop()
