@@ -5,53 +5,43 @@ import time
 import tkinter as tk
 from threading import Thread
 from tkinter import messagebox
-from tkinter.ttk import *
+from tkinter import simpledialog
+#from tkinter.ttk import *
 
-def changeName():
-    popupmsg("Enter Your New Username")
-    res="Change Name"
+
+    
 
 def showAllUsers():
-    res="All users"
+    msg="DISPLAY"
+    client_socket.send(msg.encode())
 
 def helpFunc():
     messagebox.showinfo("Title", "a Tk MessageBox")
     res="Help"
 
+def changeName():
+    name = simpledialog.askstring("Change Username", "Please enter your new name")
+    msg="USER"+name
+    client_socket.send(msg.encode())
+
+
 def leaveFunc():
     messagebox.showinfo("Leave Chat", "You have left the chat")
     msg="quit"
     client_socket.send(msg.encode())
-    #client_socket.close()
-    #window.quit()
-
-
-def popupmsg(msg):
-    popup = tk.Tk()
-    popup.geometry("400x200")
-    popup.wm_title("Change Username")
-    label = Label(popup, text=msg)
-    label.pack()
-    newName=Entry(popup)
-    newName.pack()
-    B1 = tk.ttk.Button(popup, text="Change", command = popup.destroy)
-    B1.pack()
-    popup.mainloop()
 
 def receive():
     while True:
         try:
             msg = client_socket.recv(1024).decode()
-            if msg!="quit":
-                print(msg+"\n")
-                #print("Enter a message:")
-            else:
+            if msg=="quit":
                 print("You have left the server")
                 client_socket.close()
                 window.quit()
                 break
+            else:                
+                print(msg+"\n")
         except:
-            print(msg)
             print("Error!")
             break
          
@@ -110,10 +100,10 @@ leaveMenu.add_command(label="Leave the chat",command=leaveFunc)
 menubar.add_cascade(label="Leave", menu=leaveMenu)
 
 window.config(menu=menubar)
-
+"""
 Radiobutton(window, text = "Send to All", value = 1).grid(column=0, row=1)
 Radiobutton(window, text = "Whisper", value = 2).grid(column=1, columnspan = 2, row=1)
-
+"""
 messages_frame=tk.Frame(window)
 msgForm=tk.StringVar()
 msgForm.set("Enter message: ")
@@ -121,7 +111,6 @@ scrollbar = tk.Scrollbar(messages_frame)
 msg_list = tk.Listbox(messages_frame, height=15, width=50, yscrollcommand=scrollbar.set)
 scrollbar.pack(side=tk.RIGHT, fill=tk.Y, expand=False)
 msg_list.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
-#msg_list.grid(row=3)
 messages_frame.grid(row=4)
 
 entry_field = tk.Entry(window, textvariable=msgForm)

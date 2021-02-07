@@ -1,9 +1,6 @@
-INFO:root:127.0.0.1:38295 has connected.
-INFO:root:Amy has joined 
-INFO:root:Amy: hello 
-INFO:root:Amy: he 
-INFO:root:Amy has left the chat. 
-INFO:root:127.0.0.1:38314 has connected.
-INFO:root:Amy has joined 
-INFO:root:Amy: hello 
-INFO:root:Amy has left. 
+INFO:root:127.0.0.1:39577 has connected.
+INFO:root:A has joined 
+INFO:root:A 
+INFO:root:A has changed their name to g 
+INFO:root:g 
+INFO:root:g has left the chat. 

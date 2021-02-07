@@ -24,10 +24,18 @@ def handle_client(client):
    while True:
         try:
             msg = client.recv(buffer_size).decode()
-            print(msg)
-            if msg != "quit":
-                broadcast(msg)
-            else:
+            if msg[:4] == "USER":
+                user=clients[client]
+                newName=msg[4:]
+                clients[client]=newName
+                for u in range(len(usernames)):
+                    if usernames[u]==user:
+                        usernames[u]=newName
+                broadcast(user+" has changed their name to "+newName)  
+            elif msg=="DISPLAY":
+                for i in range(len(usernames)):
+                    broadcast(usernames[i])  
+            elif msg == "quit":
                 client.send("quit".encode())
                 client.close()
                 print("{} has left.".format(clients[client]))
@@ -37,6 +45,10 @@ def handle_client(client):
                 del clients[client]
                 broadcast(user+" has left.")
                 break
+            
+            else:
+                broadcast(msg)
+
         except:
             print("{} has left.".format(clients[client]))
             user=clients[client]
@@ -44,9 +56,6 @@ def handle_client(client):
             broadcast(user+" has left the chat.")
             break
 
-def displayClients():
-    for client in usernames:
-        print(client)
 
 
 def broadcast(msg):
