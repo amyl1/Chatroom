@@ -40,12 +40,10 @@ def handle_client(client):
                 client.close()
                 print("{} has left.".format(clients[client]))
                 user=clients[client]
-                if user in usernames:
-                    usernames.remove(user)
+                usernames.remove(user)
                 del clients[client]
                 broadcast(user+" has left.")
                 break
-            
             else:
                 broadcast(msg)
 

@@ -6,9 +6,6 @@ import tkinter as tk
 from threading import Thread
 from tkinter import messagebox
 from tkinter import simpledialog
-#from tkinter.ttk import *
-
-
     
 
 def showAllUsers():
@@ -17,7 +14,6 @@ def showAllUsers():
 
 def helpFunc():
     messagebox.showinfo("Title", "a Tk MessageBox")
-    res="Help"
 
 def changeName():
     name = simpledialog.askstring("Change Username", "Please enter your new name")
@@ -41,39 +37,18 @@ def receive():
                 break
             else:                
                 print(msg+"\n")
+            msg_list.insert(tk.END, msg)
+            #msg_list.insert(msg)
         except:
             print("Error!")
             break
-         
+   
 def send():
     msg=username+": "+msgForm.get()
     msgForm.set("")
     client_socket.send(msg.encode())
 
-#check sys arguments
-if len(sys.argv) != 4 :
-   print ('Incorrect command line arguments given')
-   sys.exit(1) 
-try:
-    port = int(sys.argv[3])
-except ValueError:
-    print ('Type error: Incorrect command line arguments given')
-    sys.exit(1) 
-client_socket = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
-username = str(sys.argv[1])
-hostName = str(sys.argv[2]) 
-port = int(sys.argv[3])
 
-while not username:
-   username=input("Please enter a non-empty username")
-try:
-   client_socket.connect((hostName,port))
-except socket.error:
-   sys.exit("Error connecting: please check the port and hostname")
-print('Welcome! If you want to quit, type quit to exit.')
-receive_thread = Thread(target=receive)
-receive_thread.start()
-client_socket.send(username.encode())
 
 window=tk.Tk()
 window.title("Instant Messenger")
@@ -111,16 +86,41 @@ scrollbar = tk.Scrollbar(messages_frame)
 msg_list = tk.Listbox(messages_frame, height=15, width=50, yscrollcommand=scrollbar.set)
 scrollbar.pack(side=tk.RIGHT, fill=tk.Y, expand=False)
 msg_list.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
+msg_list.pack()
 messages_frame.grid(row=4)
 
 entry_field = tk.Entry(window, textvariable=msgForm)
-entry_field.bind("<Return>", send)
+#entry_field.bind("<Return>", send)
 entry_field.grid(column=0, row=5)
 send_button = tk.Button(window, text="Send", command=send)
 send_button.grid(column=1, row=5)
 
-window.columnconfigure(0, weight=1)
+window.columnconfigure(0, weight=2)
 window.columnconfigure(1, weight=1)
 
+#check sys arguments
+if len(sys.argv) != 4 :
+   print ('Incorrect command line arguments given')
+   sys.exit(1) 
+try:
+    port = int(sys.argv[3])
+except ValueError:
+    print ('Type error: Incorrect command line arguments given')
+    sys.exit(1) 
+client_socket = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+username = str(sys.argv[1])
+hostName = str(sys.argv[2]) 
+port = int(sys.argv[3])
+
+while not username:
+   username=input("Please enter a non-empty username")
+try:
+   client_socket.connect((hostName,port))
+except socket.error:
+   sys.exit("Error connecting: please check the port and hostname")
+print('Welcome! If you want to quit, type quit to exit.')
+receive_thread = Thread(target=receive)
+receive_thread.start()
+client_socket.send(username.encode())
 
 window.mainloop()
