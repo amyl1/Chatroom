@@ -6,6 +6,18 @@ import logging
 
 usernames=[]
 
+def sendUser(msg,user,name):
+    sent=False
+    for username in usernames:
+        if username[0]==user:
+            username[1].send("{}".format(msg).encode())
+            sent=True
+            logging.info(msg+" whispered to"+ user) 
+    if not sent:
+        for username in usernames:
+            if username[0]==name:     
+                username[1].send("User could not be found, retry sending.".encode())
+
 def accept_incoming_connections():
     #Sets up handling for incoming clients.
     while True:
@@ -18,7 +30,7 @@ def accept_incoming_connections():
 def handle_client(client):
    #Handles a single client connection.
    name = client.recv(buffer_size).decode()
-   usernames.append(name)
+   usernames.append([name,client])
    clients[client] = name
    broadcast("{} has joined".format(name))
    while True:
@@ -31,10 +43,12 @@ def handle_client(client):
                 for u in range(len(usernames)):
                     if usernames[u]==user:
                         usernames[u]=newName
-                broadcast(user+" has changed their name to "+newName)  
+                broadcast(user+" has changed their name to "+newName) 
+                logging.info(user+" has changed their name to "+newName) 
             elif msg=="DISPLAY":
                 for i in range(len(usernames)):
-                    broadcast(usernames[i])  
+                    msg=usernames[i][0] 
+                    client.send("{}".format(msg).encode())
             elif msg == "quit":
                 client.send("quit".encode())
                 client.close()
@@ -43,18 +57,22 @@ def handle_client(client):
                 usernames.remove(user)
                 del clients[client]
                 broadcast(user+" has left.")
+                logging.info(user+" has left.")
                 break
             else:
-                broadcast(msg)
+                msgParts=msg.split('*')
+                if msgParts[1]=="ALL":
+                    broadcast(msgParts[0])
+                else:
+                    sendUser(msgParts[0],msgParts[1],name)
 
         except:
             print("{} has left.".format(clients[client]))
             user=clients[client]
             del clients[client]
             broadcast(user+" has left the chat.")
+            logging.info(user+" has left.")
             break
-
-
 
 def broadcast(msg):
     for sock in clients:

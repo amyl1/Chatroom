@@ -1,25 +1,4 @@
-INFO:root:127.0.0.1:40014 has connected.
+INFO:root:127.0.0.1:1610 has connected.
 INFO:root:A has joined 
-INFO:root:A 
-INFO:root:A: Enter message: hello 
 INFO:root:A has left the chat. 
-INFO:root:127.0.0.1:40022 has connected.
-INFO:root:A has joined 
-INFO:root:A: Hello  
-INFO:root:A has left the chat. 
-INFO:root:127.0.0.1:40025 has connected.
-INFO:root:A has joined 
-INFO:root:A: hello 
-INFO:root:A has left the chat. 
-INFO:root:127.0.0.1:40029 has connected.
-INFO:root:A has joined 
-INFO:root:A: hello 
-INFO:root:A has left the chat. 
-INFO:root:127.0.0.1:40036 has connected.
-INFO:root:A has joined 
-INFO:root:A 
-INFO:root:A 
-INFO:root:A 
-INFO:root:A 
-INFO:root:A 
-INFO:root:A has left the chat. 
+INFO:root:A has left.
