@@ -1,4 +1,15 @@
-INFO:root:127.0.0.1:1610 has connected.
-INFO:root:A has joined 
-INFO:root:A has left the chat. 
-INFO:root:A has left.
+INFO:root:127.0.0.1:3481 has connected.
+INFO:root:George has joined 
+INFO:root:127.0.0.1:3484 has connected.
+INFO:root:Alice has joined 
+INFO:root:127.0.0.1:3486 has connected.
+INFO:root:Ella has joined 
+INFO:root:Ella: Hi everyone! 
+INFO:root:Ella has changed their name to Ellie 
+INFO:root:Ellie: Hello! 
+INFO:root:Alice: Hi there! 
+INFO:root:Alice: Hello George! whispered to George
+INFO:root:George: Bye everyone!  
+INFO:root:George has left.
+INFO:root:Alice has left.
+INFO:root:Ellie has left. 
